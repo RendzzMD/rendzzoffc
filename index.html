@@ -81,23 +81,46 @@
             padding: 5px;
             margin: 2px 0;
             border-radius: 5px;
-            transition: opacity 1s ease; /* Efek smooth fade out */
+            transition: opacity 0.5s;
         }
 
-        .notif-hide {
-            opacity: 0;
+        .request-counter {
+            background-color: #444;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.8;
         }
     </style>
 
     <script>
+        let requestCount = 20000;
+
         function formatNumber(number) {
-            return number.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            if (number >= 1e12) return (number / 1e12).toFixed(1) + "T";
+            if (number >= 1e9) return (number / 1e9).toFixed(1) + "B";
+            if (number >= 1e6) return (number / 1e6).toFixed(1) + "M";
+            if (number >= 1e3) return (number / 1e3).toFixed(1) + "K";
+            return number;
         }
+
+        function updateRequestCounter() {
+            requestCount += 5000;
+            const counter = document.getElementById("requestCounter");
+            counter.innerText = "Jumlah Request: " + formatNumber(requestCount);
+        }
+
+        setInterval(updateRequestCounter, 200); // 5.000 per detik (200 ms)
 
         function formatHarga() {
             const hargaInput = document.getElementById("harga");
             const rawValue = hargaInput.value.replace(/\./g, "");
-            const formattedValue = formatNumber(rawValue);
+            const formattedValue = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             hargaInput.value = formattedValue;
         }
 
@@ -117,12 +140,11 @@
             notifItem.innerText = `[ ${randomName} Berhasil Transaksi senilai ${harga} ]`;
             notifList.prepend(notifItem);
 
-            // Menghilangkan notifikasi dengan smooth effect setelah 4 detik
+            // Menghilangkan notifikasi secara smooth
             setTimeout(() => {
-                notifItem.classList.add("notif-hide");
-                setTimeout(() => {
-                    notifItem.remove();
-                }, 1000); // Tunggu efek fade out selesai sebelum menghapus
+                notifItem.style.transition = "opacity 0.5s";
+                notifItem.style.opacity = "0";
+                setTimeout(() => notifItem.remove(), 500);
             }, 4000);
         }
 
@@ -159,5 +181,8 @@
         <button class="copy-btn" onclick="copyResult()">Copy</button>
         <div id="notif-list"></div>
     </div>
+
+    <!-- Kotak Jumlah Request -->
+    <div class="request-counter" id="requestCounter">Jumlah Request: 20K</div>
 </body>
-  </html>
+            </html>
