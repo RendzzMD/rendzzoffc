@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rendzxz Done Pay</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .box {
+            border: 2px solid #fff;
+            padding: 20px;
+            margin: 10px auto;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 10px;
+        }
+
+        .title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .button, .submit, .copy-btn {
+            background-color: #444;
+            color: white;
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button:hover, .submit:hover, .copy-btn:hover {
+            background-color: #666;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid white;
+            margin: 10px 0;
+        }
+
+        .result-box {
+            background-color: #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            white-space: pre-line;
+            text-align: left;
+        }
+
+        .copy-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        input, select {
+            padding: 5px;
+            margin: 5px;
+            border-radius: 5px;
+            border: none;
+            width: 90%;
+            text-align: center;
+        }
+
+        .notif-item {
+            background-color: #444;
+            color: white;
+            padding: 5px;
+            margin: 2px 0;
+            border-radius: 5px;
+            transition: opacity 1s ease; /* Efek smooth fade out */
+        }
+
+        .notif-hide {
+            opacity: 0;
+        }
+    </style>
+
+    <script>
+        function formatNumber(number) {
+            return number.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function formatHarga() {
+            const hargaInput = document.getElementById("harga");
+            const rawValue = hargaInput.value.replace(/\./g, "");
+            const formattedValue = formatNumber(rawValue);
+            hargaInput.value = formattedValue;
+        }
+
+        function showResult() {
+            const barang = document.getElementById("barang").value;
+            const harga = document.getElementById("harga").value;
+            const payment = document.getElementById("payment").value;
+            const nb = "Barang sudah berhasil diproses. Terima kasih telah menggunakan layanan kami!";
+            const resultText = `━━━━━━━━━━━━━━━━━━━━━\n𝗔𝗟𝗛𝗔𝗠𝗗𝗨𝗟𝗜𝗟𝗟𝗔𝗛 𝗧𝗥𝗫 𝗗𝗢𝗡𝗘 ✅\n━━━━━━━━━━━━━━━━━━━━━\n❒︎ 𝗕𝗔𝗥𝗔𝗡𝗚 : ${barang}\n❒︎ 𝗛𝗔𝗥𝗚𝗔 : ${harga}\n❒︎ 𝗣𝗔𝗬𝗠𝗘𝗡𝗧 : ${payment}\n━━━━━━━━━━━━━━━━━━━━━\nNb : ${nb}`;
+            const resultBox = document.getElementById("result");
+            resultBox.innerText = resultText;
+
+            const notifList = document.getElementById("notif-list");
+            const randomName = "Ren" + Math.floor(Math.random() * 900 + 100) + "***";
+            const notifItem = document.createElement("div");
+            notifItem.classList.add("notif-item");
+            notifItem.innerText = `[ ${randomName} Berhasil Transaksi senilai ${harga} ]`;
+            notifList.prepend(notifItem);
+
+            // Menghilangkan notifikasi dengan smooth effect setelah 4 detik
+            setTimeout(() => {
+                notifItem.classList.add("notif-hide");
+                setTimeout(() => {
+                    notifItem.remove();
+                }, 1000); // Tunggu efek fade out selesai sebelum menghapus
+            }, 4000);
+        }
+
+        function copyResult() {
+            const resultBox = document.getElementById("result").innerText;
+            const textarea = document.createElement("textarea");
+            textarea.value = resultBox;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+            alert("Hasil berhasil disalin!");
+        }
+    </script>
+</head>
+<body>
+    <div class="box">
+        <hr>
+        <div class="title">𝗥𝗘𝗡𝗗𝗭𝗫𝗭 𝗗𝗢𝗡𝗘 𝗣𝗔𝗬 ✅</div>
+        <hr>
+        <p>❒︎ 𝗕𝗔𝗥𝗔𝗡𝗚 : <input type="text" id="barang" placeholder="Isi Manual" /></p>
+        <p>❒︎ 𝗛𝗔𝗥𝗚𝗔 : <input type="text" id="harga" placeholder="1.000 - 1.000.000" oninput="formatHarga()" /></p>
+        <p>❒︎ 𝗣𝗔𝗬𝗠𝗘𝗡𝗧 : 
+            <select id="payment">
+                <option value="DANA">DANA</option>
+                <option value="GOPAY">GOPAY</option>
+                <option value="OVO">OVO</option>
+                <option value="QRIS">QRIS</option>
+            </select>
+        </p>
+        <button class="submit" onclick="showResult()">Submit</button>
+        <hr>
+        <div class="result-box" id="result"></div>
+        <button class="copy-btn" onclick="copyResult()">Copy</button>
+        <div id="notif-list"></div>
+    </div>
+</body>
+  </html>
